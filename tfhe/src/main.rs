@@ -1,3 +1,10 @@
+use ethers::prelude::*;
+use eyre::Result;
+use std::sync::Arc;
+
+use keccak_hash::keccak;
+use rand::rngs::OsRng;
+use rand::RngCore;
 use tfhe::prelude::*;
 use tfhe::{generate_keys, set_server_key, ConfigBuilder, FheUint32};
 
@@ -26,6 +33,58 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
     // Decrypting on the client side:
     let clear_res: bool = encrypted_res.decrypt(&client_key);
     assert_eq!(clear_res, clear_a < clear_b);
+
+    let mut random = OsRng;
+    let mut random_bytes = [0u8; 32];
+    random.fill_bytes(&mut random_bytes);
+    let random_string = hex::encode(random_bytes);
+
+    let hash = keccak(random_string);
+    println!("Keccak-256 hash: {}", hash.to_string());
+
+    let address = "STUDENTS_ADDRESS".parse::<Address>().unwrap();
+    permit_withdraw(address, hash.to_string());
+
+    Ok(())
+}
+
+abigen!(
+    HashLockWithdraw,
+    r#"[
+        function deposit(bytes32 _hash) public payable
+        event DepositCreated(address indexed depositor, uint256 amount, bytes32 hash, uint256 depositId)
+    ]"#,
+);
+
+async fn permit_withdraw(address: Address, hash: String) -> Result<()> {
+    let provider = Provider::<Http>::try_from("http://localhost:8545")
+        .expect("could not instantiate HTTP Provider");
+
+    let wallet: LocalWallet = "0x..".parse().unwrap();
+    let client = SignerMiddleware::new(provider, wallet);
+    let client = Arc::new(client);
+
+    let contract_address = "CONTRACT_ADDRESS".parse::<Address>().unwrap();
+    let contract = HashLockWithdraw::new(contract_address, client);
+
+    let hash_bytes: [u8; 32] = hex::decode(hash.strip_prefix("0x").unwrap_or(&hash))?
+        .try_into()
+        .map_err(|_| eyre::eyre!("Invalid hash length"))?;
+    let tx = contract.deposit(hash_bytes).from(address);
+    let pending_tx = tx.send().await?;
+
+    let receipt = pending_tx.await?;
+    println!("Receipt: {:?}", receipt);
+
+    if let Some(logs) = receipt.logs {
+        for log in logs {
+            if let Ok(decoded) =
+                contract.decode_event::<DepositCreatedFilter>("DepositCreated", log)
+            {
+                println!("Deposit created: {:?}", decoded);
+            }
+        }
+    }
 
     Ok(())
 }
