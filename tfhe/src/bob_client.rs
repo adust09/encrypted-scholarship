@@ -1,8 +1,8 @@
 use std::error::Error;
 use std::sync::Arc;
-use tfhe::prelude::FheEncrypt;
-use tfhe::{prelude::FheDecrypt, ClientKey};
-use tfhe::{FheBool, FheUint8};
+use tfhe::integer::BooleanBlock;
+use tfhe::integer::ClientKey;
+use tfhe::integer::RadixCiphertext;
 
 use ethers::{
     prelude::*,
@@ -29,14 +29,18 @@ impl BobClient {
         Ok(Self { client_key })
     }
 
-    pub fn encrypt_balance(&self, balance: u8) -> Result<FheUint8, Box<dyn Error>> {
-        Ok(FheUint8::encrypt(balance, &self.client_key))
+    pub fn encrypt_balance(&self, balance: u8) -> Result<RadixCiphertext, Box<dyn Error>> {
+        const NUM_BLOCK: usize = 128;
+
+        Ok(self.client_key.encrypt_radix(balance, NUM_BLOCK))
     }
 
-    pub fn decrypt_result(&self, encrypted_result: FheBool) -> Result<bool, Box<dyn Error>> {
-        let decrypted_value: bool = FheBool::decrypt(&encrypted_result, &self.client_key);
+    pub fn decrypt_result(&self, encrypted_result: BooleanBlock) -> Result<bool, Box<dyn Error>> {
+        let decrypted_value: bool = self.client_key.decrypt_bool(&encrypted_result);
         Ok(decrypted_value)
     }
+
+    // todo: decrypt_signature
 
     pub async fn interact_with_smart_contract(
         &self,
