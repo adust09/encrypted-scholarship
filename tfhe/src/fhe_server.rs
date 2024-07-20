@@ -1,11 +1,9 @@
-use rand::Rng;
 use std::error::Error;
 use tfhe::integer::{BooleanBlock, PublicKey, RadixCiphertext, ServerKey};
-use tfhe::FheBool;
 
 use crate::ecdsa::ecdsa::ecdsa_sign;
 use crate::ecdsa::helper::u256_from_decimal_string;
-use crate::ecdsa::numeral::Numeral;
+use crate::ecdsa::ops::secp256k1::prelude::{FQ_MODULO, FR_MODULO, GENERATOR};
 pub struct FheServer {
     server_key: ServerKey,
     public_key: PublicKey,
@@ -38,24 +36,20 @@ impl FheServer {
         let nonce = u256_from_decimal_string(
             "158972629851468960855479098042189567798917817837573660423710583832714848",
         );
+        let msg = u256_from_decimal_string(
+            "65108744961846543415519418389643270459525907322081164366671650776835723265410",
+        );
         const NUM_BLOCK: usize = 128;
-        // server側の署名を便宜上ここで作成する
         let enc_sk = self.public_key.encrypt_radix(sk, NUM_BLOCK);
         let enc_k = self.public_key.encrypt_radix(nonce, NUM_BLOCK);
-
-        let gx: u8 = 4;
-        let gy: u8 = 156;
-        let generator = (gx, gy);
-        let q_modulo: u8 = 211;
-        let r_modulo: u8 = 199;
 
         let signature = ecdsa_sign::<NUM_BLOCK, _>(
             &enc_sk,
             &enc_k,
-            1, // resultをBooleanBlockからPにできる？
-            generator,
-            q_modulo,
-            r_modulo,
+            msg, // resultをBooleanBlockからPにできる？0or1
+            *GENERATOR,
+            *FQ_MODULO,
+            *FR_MODULO,
             &self.server_key,
         );
         return signature;
