@@ -150,7 +150,10 @@ mod tests {
     use std::time::Instant;
 
     use num_bigint::BigInt;
-    use tfhe::{integer::keycache::IntegerKeyCache, shortint::prelude::PARAM_MESSAGE_2_CARRY_2};
+    use tfhe::{
+        integer::{keycache::IntegerKeyCache, IntegerKeyKind},
+        shortint::prelude::PARAM_MESSAGE_2_CARRY_2,
+    };
 
     use ecdsa::ops::{
         mersenne::{mersenne_mod_native, mul_mod_mersenne},
@@ -173,34 +176,35 @@ mod tests {
         assert_eq!(mersenne_mod_native(x * y, p), mul_mod_native(x, y, p));
     }
 
-    // #[test]
-    // fn correct_mersenne_mul_mod() {
-    //     let (client_key, server_key) = IntegerKeyCache.get_from_params(PARAM_MESSAGE_2_CARRY_2);
-    //     const NUM_BLOCK: usize = 4;
-    //     let p: u8 = 251;
+    #[test]
+    fn correct_mersenne_mul_mod() {
+        let (client_key, server_key) =
+            IntegerKeyCache.get_from_params(PARAM_MESSAGE_2_CARRY_2, IntegerKeyKind::Radix);
+        const NUM_BLOCK: usize = 4;
+        let p: u8 = 251;
 
-    //     let mul_mod_naive = |x: u128, y: u128| -> u128 { (x * y) % p as u128 };
+        let mul_mod_naive = |x: u128, y: u128| -> u128 { (x * y) % p as u128 };
 
-    //     let x: u128 = 250;
-    //     let y: u128 = 249;
-    //     let enc_x = client_key.encrypt_radix(x, NUM_BLOCK);
-    //     let enc_y = client_key.encrypt_radix(y, NUM_BLOCK);
-    //     let now = Instant::now();
-    //     let xy_mod_p = mul_mod_mersenne::<NUM_BLOCK, _>(&enc_x, &enc_y, p, &server_key);
-    //     println!(
-    //         "mul mod mersenne done in {:.2}s",
-    //         now.elapsed().as_secs_f64()
-    //     );
-    //     assert_eq!(
-    //         client_key.decrypt_radix::<u128>(&xy_mod_p),
-    //         mul_mod_naive(x, y)
-    //     );
-    // }
+        let x: u128 = 250;
+        let y: u128 = 249;
+        let enc_x = client_key.encrypt_radix(x, NUM_BLOCK);
+        let enc_y = client_key.encrypt_radix(y, NUM_BLOCK);
+        let now = Instant::now();
+        let xy_mod_p = mul_mod_mersenne::<NUM_BLOCK, _>(&enc_x, &enc_y, p, &server_key);
+        println!(
+            "mul mod mersenne done in {:.2}s",
+            now.elapsed().as_secs_f64()
+        );
+        assert_eq!(
+            client_key.decrypt_radix::<u128>(&xy_mod_p),
+            mul_mod_naive(x, y)
+        );
+    }
 
-    // #[test]
-    // fn correct_mersenne_transfrom() {
-    //     let p: u8 = 127;
-    //     let coeff = mersenne_coeff_p(p);
-    //     assert_eq!(coeff, (7, BigInt::from(1)));
-    // }
+    #[test]
+    fn correct_mersenne_transfrom() {
+        let p: u8 = 127;
+        let coeff = mersenne_coeff_p(p);
+        assert_eq!(coeff, (7, BigInt::from(1)));
+    }
 }

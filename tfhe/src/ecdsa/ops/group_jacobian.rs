@@ -877,7 +877,10 @@ pub fn group_projective_into_affine_native<P: Numeral>(x: P, y: P, z: P, p: P) -
 #[cfg(test)]
 mod tests {
 
-    use tfhe::{integer::keycache::IntegerKeyCache, shortint::prelude::PARAM_MESSAGE_2_CARRY_2};
+    use tfhe::{
+        integer::{keycache::IntegerKeyCache, IntegerKeyKind},
+        shortint::prelude::PARAM_MESSAGE_2_CARRY_2,
+    };
 
     use crate::{
         ecdsa::ops::group_jacobian::{
@@ -892,106 +895,109 @@ mod tests {
         group_projective_scalar_mul_constant_windowed, group_projective_scalar_mul_native,
     };
 
-    // #[test]
-    // fn correct_jacobian_double() {
-    //     let (client_key, server_key) = IntegerKeyCache.get_from_params(PARAM_MESSAGE_2_CARRY_2);
+    #[test]
+    fn correct_jacobian_double() {
+        let (client_key, server_key) =
+            IntegerKeyCache.get_from_params(PARAM_MESSAGE_2_CARRY_2, IntegerKeyKind::Radix);
 
-    //     const NUM_BLOCK: usize = 4;
-    //     type Integer = u8;
-    //     let p: Integer = 251;
-    //     let x1: Integer = 8;
-    //     let y1: Integer = 45;
+        const NUM_BLOCK: usize = 4;
+        type Integer = u8;
+        let p: Integer = 251;
+        let x1: Integer = 8;
+        let y1: Integer = 45;
 
-    //     let ct_x1 = client_key.encrypt_radix(x1, NUM_BLOCK);
-    //     let ct_y1 = client_key.encrypt_radix(y1, NUM_BLOCK);
+        let ct_x1 = client_key.encrypt_radix(x1, NUM_BLOCK);
+        let ct_y1 = client_key.encrypt_radix(y1, NUM_BLOCK);
 
-    //     let (x_new, y_new, z_new) = group_projective_double::<NUM_BLOCK, _>(
-    //         &ct_x1,
-    //         &ct_y1,
-    //         &server_key.create_trivial_radix(1, NUM_BLOCK),
-    //         p,
-    //         &server_key,
-    //     );
-    //     let x_dec = client_key.decrypt_radix::<Integer>(&x_new);
-    //     let y_dec = client_key.decrypt_radix::<Integer>(&y_new);
-    //     let z_dec = client_key.decrypt_radix::<Integer>(&z_new);
+        let (x_new, y_new, z_new) = group_projective_double::<NUM_BLOCK, _>(
+            &ct_x1,
+            &ct_y1,
+            &server_key.create_trivial_radix(1, NUM_BLOCK),
+            p,
+            &server_key,
+        );
+        let x_dec = client_key.decrypt_radix::<Integer>(&x_new);
+        let y_dec = client_key.decrypt_radix::<Integer>(&y_new);
+        let z_dec = client_key.decrypt_radix::<Integer>(&z_new);
 
-    //     let res = group_projective_double_native(x1, y1, 1, p);
+        let res = group_projective_double_native(x1, y1, 1, p);
 
-    //     assert_eq!(x_dec, res.0);
-    //     assert_eq!(y_dec, res.1);
-    //     assert_eq!(z_dec, res.2);
-    // }
+        assert_eq!(x_dec, res.0);
+        assert_eq!(y_dec, res.1);
+        assert_eq!(z_dec, res.2);
+    }
 
-    // #[test]
-    // fn correct_jacobian_add_affine() {
-    //     let (client_key, server_key) = IntegerKeyCache.get_from_params(PARAM_MESSAGE_2_CARRY_2);
+    #[test]
+    fn correct_jacobian_add_affine() {
+        let (client_key, server_key) =
+            IntegerKeyCache.get_from_params(PARAM_MESSAGE_2_CARRY_2, IntegerKeyKind::Radix);
 
-    //     const NUM_BLOCK: usize = 4;
-    //     type Integer = u8;
-    //     let p: Integer = 251;
-    //     let x1: Integer = 48;
-    //     let y1: Integer = 68;
-    //     let z1: Integer = 153;
-    //     let x2: Integer = 56;
-    //     let y2: Integer = 225;
+        const NUM_BLOCK: usize = 4;
+        type Integer = u8;
+        let p: Integer = 251;
+        let x1: Integer = 48;
+        let y1: Integer = 68;
+        let z1: Integer = 153;
+        let x2: Integer = 56;
+        let y2: Integer = 225;
 
-    //     let ct_x1 = client_key.encrypt_radix(x1, NUM_BLOCK);
-    //     let ct_y1 = client_key.encrypt_radix(y1, NUM_BLOCK);
-    //     let ct_z1 = client_key.encrypt_radix(z1, NUM_BLOCK);
-    //     let ct_x2 = client_key.encrypt_radix(x2, NUM_BLOCK);
-    //     let ct_y2 = client_key.encrypt_radix(y2, NUM_BLOCK);
+        let ct_x1 = client_key.encrypt_radix(x1, NUM_BLOCK);
+        let ct_y1 = client_key.encrypt_radix(y1, NUM_BLOCK);
+        let ct_z1 = client_key.encrypt_radix(z1, NUM_BLOCK);
+        let ct_x2 = client_key.encrypt_radix(x2, NUM_BLOCK);
+        let ct_y2 = client_key.encrypt_radix(y2, NUM_BLOCK);
 
-    //     let (x_new, y_new, z_new) = group_projective_add_affine::<NUM_BLOCK, _>(
-    //         &ct_x1,
-    //         &ct_y1,
-    //         &ct_z1,
-    //         &ct_x2,
-    //         &ct_y2,
-    //         &client_key.encrypt_radix(1u8, NUM_BLOCK),
-    //         p,
-    //         &server_key,
-    //     );
-    //     let x_dec = client_key.decrypt_radix::<Integer>(&x_new);
-    //     let y_dec = client_key.decrypt_radix::<Integer>(&y_new);
-    //     let z_dec = client_key.decrypt_radix::<Integer>(&z_new);
+        let (x_new, y_new, z_new) = group_projective_add_affine::<NUM_BLOCK, _>(
+            &ct_x1,
+            &ct_y1,
+            &ct_z1,
+            &ct_x2,
+            &ct_y2,
+            &client_key.encrypt_radix(1u8, NUM_BLOCK),
+            p,
+            &server_key,
+        );
+        let x_dec = client_key.decrypt_radix::<Integer>(&x_new);
+        let y_dec = client_key.decrypt_radix::<Integer>(&y_new);
+        let z_dec = client_key.decrypt_radix::<Integer>(&z_new);
 
-    //     let res = group_projective_add_affine_native(x1, y1, z1, x2, y2, p);
+        let res = group_projective_add_affine_native(x1, y1, z1, x2, y2, p);
 
-    //     assert_eq!(x_dec, res.0);
-    //     assert_eq!(y_dec, res.1);
-    //     assert_eq!(z_dec, res.2);
-    // }
+        assert_eq!(x_dec, res.0);
+        assert_eq!(y_dec, res.1);
+        assert_eq!(z_dec, res.2);
+    }
 
-    // #[test]
-    // fn correct_jacobian_scalar_mul() {
-    //     let (client_key, server_key) = IntegerKeyCache.get_from_params(PARAM_MESSAGE_2_CARRY_2);
+    #[test]
+    fn correct_jacobian_scalar_mul() {
+        let (client_key, server_key) =
+            IntegerKeyCache.get_from_params(PARAM_MESSAGE_2_CARRY_2, IntegerKeyKind::Radix);
 
-    //     const NUM_BLOCK: usize = 4;
-    //     type Integer = u8;
-    //     let p: u8 = 251;
-    //     let x: u8 = 8;
-    //     let y: u8 = 45;
-    //     let scalar: u8 = 6;
-    //     let ct_scalar = client_key.encrypt_radix(scalar, NUM_BLOCK);
+        const NUM_BLOCK: usize = 4;
+        type Integer = u8;
+        let p: u8 = 251;
+        let x: u8 = 8;
+        let y: u8 = 45;
+        let scalar: u8 = 6;
+        let ct_scalar = client_key.encrypt_radix(scalar, NUM_BLOCK);
 
-    //     let (x_new, y_new, z_new) = group_projective_scalar_mul_constant_windowed::<
-    //         WINDOW,
-    //         NUM_BLOCK,
-    //         _,
-    //     >(x, y, &ct_scalar, p, &server_key);
-    //     let (x_final, y_final) =
-    //         group_projective_into_affine::<NUM_BLOCK, _>(&x_new, &y_new, &z_new, p, &server_key);
+        let (x_new, y_new, z_new) = group_projective_scalar_mul_constant_windowed::<
+            WINDOW,
+            NUM_BLOCK,
+            _,
+        >(x, y, &ct_scalar, p, &server_key);
+        let (x_final, y_final) =
+            group_projective_into_affine::<NUM_BLOCK, _>(&x_new, &y_new, &z_new, p, &server_key);
 
-    //     let x_dec = client_key.decrypt_radix::<Integer>(&x_final);
-    //     let y_dec = client_key.decrypt_radix::<Integer>(&y_final);
+        let x_dec = client_key.decrypt_radix::<Integer>(&x_final);
+        let y_dec = client_key.decrypt_radix::<Integer>(&y_final);
 
-    //     let res = group_projective_scalar_mul_native(x, y, scalar, p);
-    //     let res = group_projective_into_affine_native(res.0, res.1, res.2, p);
+        let res = group_projective_scalar_mul_native(x, y, scalar, p);
+        let res = group_projective_into_affine_native(res.0, res.1, res.2, p);
 
-    //     assert_eq!(x_dec, res.0);
-    //     assert_eq!(y_dec, res.1);
-    // }
+        assert_eq!(x_dec, res.0);
+        assert_eq!(y_dec, res.1);
+    }
 
     #[test]
     fn correct_native_group_ops_jacobian() {
