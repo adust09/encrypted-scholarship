@@ -1,5 +1,7 @@
 mod bob_client;
+mod ecdsa;
 mod fhe_server;
+
 use bob_client::BobClient;
 use fhe_server::FheServer;
 use std::error::Error;

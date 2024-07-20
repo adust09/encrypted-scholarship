@@ -3,7 +3,6 @@ use std::error::Error;
 use tfhe::prelude::FheOrd;
 use tfhe::ServerKey;
 use tfhe::{set_server_key, FheBool, FheUint8};
-
 pub struct FheServer {
     server_key: ServerKey,
 }
