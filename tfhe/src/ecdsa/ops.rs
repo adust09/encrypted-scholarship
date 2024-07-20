@@ -85,7 +85,8 @@ pub fn modulo_fast<const NB: usize, P: Numeral>(
     let len = x.blocks().len();
     let mut x = x.clone();
     let is_gt = server_key.scalar_ge_parallelized(&x, b);
-    let to_sub = selector_zero_constant::<NB, _>(b, &is_gt, server_key);
+    let radix_is_get: RadixCiphertext = is_gt.into_radix(NB - 1, server_key);
+    let to_sub = selector_zero_constant::<NB, _>(b, &radix_is_get, server_key);
     server_key.sub_assign_parallelized(&mut x, &to_sub);
     server_key.trim_radix_blocks_msb_assign(&mut x, len - NB);
     x
@@ -177,12 +178,13 @@ pub fn inverse_mod_trim<const NB: usize, P: Numeral>(
         // was_done = was_done | is_done
         // done_now = is_done & never_done
         let mut done = server_key.scalar_eq_parallelized(&full_r, 0);
-        let len = done.blocks().len();
-        server_key.trim_radix_blocks_msb_assign(&mut done, len - 1);
+        let mut radix_done: RadixCiphertext = done.into_radix(NB - 1, server_key);
+        let len = radix_done.blocks().len();
+        server_key.trim_radix_blocks_msb_assign(&mut radix_done, len - 1);
         let never_done =
             server_key.sub_parallelized(&server_key.create_trivial_radix(1, 1), &was_done);
-        let done_now = server_key.bitand_parallelized(&done, &never_done);
-        server_key.bitor_assign_parallelized(&mut was_done, &done);
+        let done_now = server_key.bitand_parallelized(&radix_done, &never_done);
+        server_key.bitor_assign_parallelized(&mut was_done, &radix_done);
 
         let update = selector_zero(&t0, &done_now, server_key);
         server_key.add_assign_parallelized(&mut inv, &update);
@@ -201,10 +203,13 @@ pub fn inverse_mod_trim<const NB: usize, P: Numeral>(
     // final result mod p
     // inverse can be **negative**. so we need to add p to make it positive
     server_key.scalar_add_assign_parallelized(&mut inv, p);
-    let mut is_gt = server_key.scalar_ge_parallelized(&inv, p);
-    server_key.trim_radix_blocks_msb_assign(&mut is_gt, padded_nb - 1);
-    let to_sub =
-        server_key.mul_parallelized(&server_key.create_trivial_radix(p, padded_nb), &is_gt);
+    let is_gt = server_key.scalar_ge_parallelized(&inv, p);
+    let mut radix_is_get: RadixCiphertext = is_gt.into_radix(NB - 1, server_key);
+    server_key.trim_radix_blocks_msb_assign(&mut radix_is_get, padded_nb - 1);
+    let to_sub = server_key.mul_parallelized(
+        &server_key.create_trivial_radix(p, padded_nb),
+        &radix_is_get,
+    );
     server_key.sub_assign_parallelized(&mut inv, &to_sub);
     server_key.full_propagate_parallelized(&mut inv);
 
@@ -242,7 +247,8 @@ pub fn sub_mod<const NB: usize, P: Numeral>(
     let start_ops = Instant::now();
 
     let is_gt = server_key.gt_parallelized(b, a);
-    let to_add = selector_zero_constant::<NB, _>(p, &is_gt, server_key);
+    let radix_is_get: RadixCiphertext = is_gt.into_radix(NB - 1, server_key);
+    let to_add = selector_zero_constant::<NB, _>(p, &radix_is_get, server_key);
     let mut a_expanded = server_key.extend_radix_with_trivial_zero_blocks_msb(a, 1);
     server_key.add_assign_parallelized(&mut a_expanded, &to_add);
     server_key.sub_assign_parallelized(&mut a_expanded, b);
