@@ -1,4 +1,4 @@
-use scholarship::ecdsa::numeral::Numeral;
+use scholarship::numeral::Numeral;
 use std::{error::Error, sync::Arc};
 
 use tfhe::integer::{bigint::u256 as U256, BooleanBlock, ClientKey, RadixCiphertext};

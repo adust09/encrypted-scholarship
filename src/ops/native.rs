@@ -2,8 +2,8 @@ use num_bigint::BigInt;
 use tfhe::integer::block_decomposition::{DecomposableInto, RecomposableFrom};
 
 use crate::{
-    ecdsa::helper::{from_bigint, to_bigint},
-    ecdsa::numeral::Numeral,
+    helper::{from_bigint, to_bigint},
+    numeral::Numeral,
 };
 
 /// a^-1 mod p where a*a^-1 = 1 mod p
@@ -88,8 +88,8 @@ mod tests {
     use tfhe::integer::U256;
 
     use crate::{
-        ecdsa::helper::u256_from_decimal_string,
-        ecdsa::ops::{
+        helper::u256_from_decimal_string,
+        ops::{
             native::{
                 add_mod_native, double_mod_native, inverse_mod_native, pow_mod_native,
                 square_mod_native, sub_mod_native,

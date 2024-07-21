@@ -11,8 +11,8 @@ use tfhe::integer::{
 };
 
 use crate::{
-    ecdsa::helper::{bigint_ilog2_ceil, bigint_to_u128, from_bigint, to_bigint},
-    ecdsa::numeral::Numeral,
+    helper::{bigint_ilog2_ceil, bigint_to_u128, from_bigint, to_bigint},
+    numeral::Numeral,
 };
 
 use super::{modulo_div_rem, modulo_fast};
@@ -155,7 +155,7 @@ mod tests {
         shortint::prelude::PARAM_MESSAGE_2_CARRY_2,
     };
 
-    use ecdsa::ops::{
+    use crate::ops::{
         mersenne::{mersenne_mod_native, mul_mod_mersenne},
         native::mul_mod_native,
     };

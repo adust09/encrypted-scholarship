@@ -11,9 +11,9 @@ use tfhe::{
 };
 
 use crate::{
-    ecdsa::helper::{format, read_client_key},
-    ecdsa::numeral::Numeral,
-    ecdsa::ops::{
+    helper::{format, read_client_key},
+    numeral::Numeral,
+    ops::{
         add_mod,
         group_jacobian::{
             group_projective_add_projective, group_projective_add_projective_native,
@@ -26,7 +26,7 @@ use crate::{
         modulo_fast, mul_mod,
         native::{add_mod_native, inverse_mod_native, modulo_native, mul_mod_native},
     },
-    ecdsa::WINDOW,
+    WINDOW,
 };
 
 /// perform homomorphic ECDSA signing on message `P` % `r` over secret key `secret_key` % `r` and nonce `k` % `r`
@@ -142,10 +142,10 @@ mod tests {
     use tfhe::{integer::keycache::IntegerKeyCache, shortint::prelude::PARAM_MESSAGE_2_CARRY_2};
 
     use crate::{
-        ecdsa::ecdsa::ecdsa_sign,
-        ecdsa::helper::set_client_key,
-        ecdsa::numeral::Numeral,
-        ecdsa::ops::group_jacobian::{
+        ecdsa::ecdsa_sign,
+        helper::set_client_key,
+        numeral::Numeral,
+        ops::group_jacobian::{
             group_projective_double_native, group_projective_into_affine_native,
             group_projective_scalar_mul_native,
         },

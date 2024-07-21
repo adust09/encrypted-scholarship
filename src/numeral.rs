@@ -8,7 +8,7 @@ use tfhe::{
     },
 };
 
-use crate::ecdsa::helper::{format, to_bigint};
+use crate::helper::{format, to_bigint};
 
 pub trait Numeral:
     Numeric

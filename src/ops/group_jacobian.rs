@@ -14,9 +14,9 @@ use tfhe::{
 };
 
 use crate::{
-    ecdsa::helper::{format, read_client_key},
-    ecdsa::numeral::Numeral,
-    ecdsa::ops::{
+    helper::{format, read_client_key},
+    numeral::Numeral,
+    ops::{
         native::{add_mod_native, double_mod_native, mul_mod_native, sub_mod_native},
         primitive::parallel_fn,
         selector_zero, selector_zero_constant,
@@ -883,12 +883,12 @@ mod tests {
     };
 
     use crate::{
-        ecdsa::ops::group_jacobian::{
+        ops::group_jacobian::{
             group_projective_add_affine, group_projective_add_affine_native,
             group_projective_double, group_projective_double_native, group_projective_into_affine,
             group_projective_into_affine_native,
         },
-        ecdsa::WINDOW,
+        WINDOW,
     };
 
     use super::{

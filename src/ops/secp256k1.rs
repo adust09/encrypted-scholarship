@@ -2,7 +2,7 @@ pub mod prelude {
     use lazy_static::lazy_static;
     use tfhe::integer::U256;
 
-    use crate::ecdsa::helper::u256_from_decimal_string;
+    use crate::helper::u256_from_decimal_string;
 
     lazy_static! {
         /// The base prime field modulus of secp256k1

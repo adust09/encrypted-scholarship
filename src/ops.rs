@@ -13,10 +13,10 @@ use tfhe::{
 };
 
 use crate::{
-    ecdsa::helper::{format, read_client_key},
-    ecdsa::numeral::Numeral,
-    ecdsa::ops::mersenne::mod_mersenne,
-    ecdsa::stats::{ProtocolLowOps, ProtocolStats},
+    helper::{format, read_client_key},
+    numeral::Numeral,
+    ops::mersenne::mod_mersenne,
+    stats::{ProtocolLowOps, ProtocolStats},
 };
 
 use self::{mersenne::mul_mod_mersenne, native::inverse_mod_native, primitive::parallel_fn};
@@ -372,9 +372,9 @@ mod tests {
     };
 
     use crate::{
-        ecdsa::helper::set_client_key,
-        ecdsa::numeral::Numeral,
-        ecdsa::ops::{
+        helper::set_client_key,
+        numeral::Numeral,
+        ops::{
             add_mod, double_mod, inverse_mod, inverse_mods,
             mersenne::mod_mersenne,
             modulo_fast, mul_mod, mul_mod_constant,
@@ -384,7 +384,7 @@ mod tests {
             },
             square_mod, sub_mod,
         },
-        ecdsa::CLIENT_KEY,
+        CLIENT_KEY,
     };
 
     #[test]

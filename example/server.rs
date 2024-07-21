@@ -1,9 +1,9 @@
 use std::error::Error;
 use tfhe::integer::{BooleanBlock, PublicKey, RadixCiphertext, ServerKey};
 
-use crate::ecdsa::ecdsa::ecdsa_sign;
-use crate::ecdsa::helper::u256_from_decimal_string;
-use crate::ecdsa::ops::secp256k1::prelude::{FQ_MODULO, FR_MODULO, GENERATOR};
+use crate::ecdsa::ecdsa_sign;
+use crate::helper::u256_from_decimal_string;
+use crate::ops::secp256k1::prelude::{FQ_MODULO, FR_MODULO, GENERATOR};
 pub struct FheServer {
     server_key: ServerKey,
     public_key: PublicKey,

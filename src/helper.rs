@@ -4,7 +4,7 @@ use tfhe::integer::{
     ClientKey, U256,
 };
 
-use crate::ecdsa::CLIENT_KEY;
+use crate::CLIENT_KEY;
 
 pub fn bigint_ilog2_ceil(value: &BigInt) -> u32 {
     let mut value = value.clone();
@@ -115,7 +115,7 @@ mod tests {
 
     use num_bigint::BigInt;
 
-    use crate::ecdsa::helper::{bigint_ilog2_ceil, bigint_ilog2_floor, format};
+    use crate::helper::{bigint_ilog2_ceil, bigint_ilog2_floor, format};
 
     use super::u256_from_decimal_string;
 
