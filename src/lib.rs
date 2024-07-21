@@ -7,10 +7,13 @@ use lazy_static::lazy_static;
 use logging_timer::Level;
 use tfhe::integer::ClientKey;
 
+pub mod client;
 pub mod ecdsa;
+pub mod example;
 pub mod helper;
 pub mod numeral;
 pub mod ops;
+pub mod server;
 pub mod stats;
 
 lazy_static! {

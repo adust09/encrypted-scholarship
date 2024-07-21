@@ -1,11 +1,7 @@
-mod client;
-mod ecdsa;
-mod server;
-
 use std::error::Error;
 
-use client::BobClient;
-use server::FheServer;
+use crate::client::BobClient;
+use crate::server::FheServer;
 use tfhe::integer::{
     keycache::IntegerKeyCache,
     {IntegerKeyKind, PublicKey},
@@ -33,13 +29,13 @@ fn simulate_scholarship_application() -> Result<(), Box<dyn Error>> {
 
     // Bobによる結果の復号
     let is_eligible = bob_client.decrypt_result(encrypted_result)?;
-    // let decrypted_signature = bob_client.decrypt_signature(signature)?;
-    // let decrypted_signature = bob_client.decrypt_result(signature)?;
+    println!("Bob's eligibility: {}", is_eligible);
+
+    let decrypted_signature = bob_client.decrypt_signature(signature);
 
     // 奨学金の受け取り
-    // let _result = bob_client.interact_with_smart_contract(signature);
-
-    println!("Bob's eligibility: {}", is_eligible);
+    // convert (StaticUnsignedBigInt<4>, StaticUnsignedBigInt<4>) to Vec<u8>
+    // let _result = bob_client.interact_with_smart_contract(decrypted_signature);
 
     Ok(())
 }
