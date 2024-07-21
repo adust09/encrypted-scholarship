@@ -1871,24 +1871,6 @@ dependencies = [
 ]
 
 [[package]]
-name = "my_tfhe_project"
-version = "0.1.0"
-dependencies = [
- "ctor",
- "env_logger",
- "ethers",
- "eyre",
- "hex",
- "lazy_static",
- "logging_timer",
- "num-bigint",
- "rand",
- "rayon",
- "tfhe",
- "tokio",
-]
-
-[[package]]
 name = "new_debug_unreachable"
 version = "1.0.6"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -2691,6 +2673,24 @@ dependencies = [
  "proc-macro2",
  "quote",
  "syn 1.0.109",
+]
+
+[[package]]
+name = "scholarship"
+version = "0.1.0"
+dependencies = [
+ "ctor",
+ "env_logger",
+ "ethers",
+ "eyre",
+ "hex",
+ "lazy_static",
+ "logging_timer",
+ "num-bigint",
+ "rand",
+ "rayon",
+ "tfhe",
+ "tokio",
 ]
 
 [[package]]

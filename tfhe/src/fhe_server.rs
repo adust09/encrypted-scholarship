@@ -36,9 +36,8 @@ impl FheServer {
         let nonce = u256_from_decimal_string(
             "158972629851468960855479098042189567798917817837573660423710583832714848",
         );
-        let msg = u256_from_decimal_string(
-            "65108744961846543415519418389643270459525907322081164366671650776835723265410",
-        );
+        // resultの代わりに明示的なメッセージを使う
+        let msg = u256_from_decimal_string("1");
         const NUM_BLOCK: usize = 128;
         let enc_sk = self.public_key.encrypt_radix(sk, NUM_BLOCK);
         let enc_k = self.public_key.encrypt_radix(nonce, NUM_BLOCK);

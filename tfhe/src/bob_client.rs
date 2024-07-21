@@ -1,8 +1,7 @@
-use std::error::Error;
-use std::sync::Arc;
-use tfhe::integer::BooleanBlock;
-use tfhe::integer::ClientKey;
-use tfhe::integer::RadixCiphertext;
+use scholarship::ecdsa::numeral::Numeral;
+use std::{error::Error, sync::Arc};
+
+use tfhe::integer::{bigint::u256 as U256, BooleanBlock, ClientKey, RadixCiphertext};
 
 use ethers::{
     prelude::*,
@@ -41,6 +40,13 @@ impl BobClient {
     }
 
     // todo: decrypt_signature
+    pub fn decrypt_signature(&self, signature: (U256, U256)) -> Result<(), Box<dyn Error>> {
+        let signature = (
+            U256::decrypt(&signature.0, &self.client_key),
+            U256::decrypt(&signature.1, &self.client_key),
+        );
+        Ok(signature)
+    }
 
     pub async fn interact_with_smart_contract(
         &self,

@@ -2,11 +2,14 @@ mod bob_client;
 mod ecdsa;
 mod fhe_server;
 
+use std::error::Error;
+
 use bob_client::BobClient;
 use fhe_server::FheServer;
-use std::error::Error;
-use tfhe::integer::keycache::IntegerKeyCache;
-use tfhe::integer::{IntegerKeyKind, PublicKey};
+use tfhe::integer::{
+    keycache::IntegerKeyCache,
+    {IntegerKeyKind, PublicKey},
+};
 use tfhe::shortint::parameters::PARAM_MESSAGE_2_CARRY_2;
 
 fn simulate_scholarship_application() -> Result<(), Box<dyn Error>> {
@@ -30,6 +33,7 @@ fn simulate_scholarship_application() -> Result<(), Box<dyn Error>> {
 
     // Bobによる結果の復号
     let is_eligible = bob_client.decrypt_result(encrypted_result)?;
+    // let decrypted_signature = bob_client.decrypt_signature(signature)?;
     // let decrypted_signature = bob_client.decrypt_result(signature)?;
 
     // 奨学金の受け取り
