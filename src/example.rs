@@ -1,12 +1,9 @@
 use std::error::Error;
 use tfhe::integer::bigint::StaticUnsignedBigInt;
 
-use crate::client::BobClient; // Fixed the undeclared crate or module error
+use crate::client::BobClient;
 use crate::server::FheServer;
-use tfhe::integer::{
-    keycache::IntegerKeyCache,
-    {IntegerKeyKind, PublicKey},
-};
+use tfhe::integer::{keycache::IntegerKeyCache, IntegerKeyKind, PublicKey};
 use tfhe::shortint::parameters::PARAM_MESSAGE_2_CARRY_2;
 
 fn to_le_bytes<const N: usize>(bigint: &StaticUnsignedBigInt<N>) -> Vec<u8> {
@@ -15,7 +12,7 @@ fn to_le_bytes<const N: usize>(bigint: &StaticUnsignedBigInt<N>) -> Vec<u8> {
     bytes
 }
 
-fn main() -> Result<(), Box<dyn Error>> {
+pub fn main() -> Result<(), Box<dyn Error>> {
     // setup server and client
     let (client_key, server_key) =
         IntegerKeyCache.get_from_params(PARAM_MESSAGE_2_CARRY_2, IntegerKeyKind::Radix);
@@ -40,7 +37,7 @@ fn main() -> Result<(), Box<dyn Error>> {
         let mut signature_vec = Vec::new();
         signature_vec.extend_from_slice(&to_le_bytes(&x));
         signature_vec.extend_from_slice(&to_le_bytes(&y));
-        let claim_result = bob_client.interact_with_smart_contract(signature_vec);
+        let claim_result = bob_client.claim_scholarship(signature_vec);
     } else {
         println!("Sorry, you are not eligible for the scholarship.");
     }

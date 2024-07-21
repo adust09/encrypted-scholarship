@@ -11,7 +11,6 @@ pub struct FheServer {
     public_key: PublicKey,
 }
 
-// Start of Selection
 impl FheServer {
     pub fn new(server_key: ServerKey, public_key: PublicKey) -> Result<Self, Box<dyn Error>> {
         Ok(Self {

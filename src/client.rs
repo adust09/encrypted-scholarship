@@ -48,23 +48,15 @@ impl BobClient {
         return signature;
     }
 
-    pub async fn interact_with_smart_contract(
-        &self,
-        signature: Vec<u8>,
-    ) -> Result<(), Box<dyn Error>> {
-        // Provider の設定（ローカルの場合）
+    pub async fn claim_scholarship(&self, signature: Vec<u8>) -> Result<(), Box<dyn Error>> {
         let provider = Provider::<Http>::try_from("http://localhost:8545")?;
-
-        // 秘密鍵からウォレットを作成（注意: 実際の秘密鍵を直接コードに書かないでください）
         let wallet: LocalWallet = "0x...".parse()?;
         let client = SignerMiddleware::new(provider, wallet);
         let client = Arc::new(client);
 
-        // コントラクトアドレスの設定
         let contract_address = "CONTRACT_ADDRESS_HERE".parse::<Address>()?;
         let contract = ScholarshipFund::new(contract_address, client.clone());
 
-        // 奨学金の申請
         let tx = contract.request_scholarship(signature.into());
         let pending_tx = tx.send().await?;
         let receipt = pending_tx.await?;
@@ -79,7 +71,6 @@ impl BobClient {
                 println!("Scholarship approved for: {:?}", decoded.applicant);
             }
         }
-        // 奨学金の引き出し
         let withdraw_tx = contract.withdraw();
         let pending_withdraw_tx = withdraw_tx.send().await?;
         let withdraw_receipt = pending_withdraw_tx.await?;
