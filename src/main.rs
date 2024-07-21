@@ -1,11 +1,11 @@
-mod bob_client;
+mod client;
 mod ecdsa;
-mod fhe_server;
+mod server;
 
 use std::error::Error;
 
-use bob_client::BobClient;
-use fhe_server::FheServer;
+use client::BobClient;
+use server::FheServer;
 use tfhe::integer::{
     keycache::IntegerKeyCache,
     {IntegerKeyKind, PublicKey},
