@@ -1,4 +1,4 @@
-use crate::numeral::Numeral;
+use ecdsa::numeral::Numeral;
 use std::{error::Error, sync::Arc};
 
 use tfhe::integer::{BooleanBlock, ClientKey, RadixCiphertext, U256};

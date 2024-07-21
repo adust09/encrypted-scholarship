@@ -724,6 +724,22 @@ dependencies = [
 
 [[package]]
 name = "ecdsa"
+version = "0.1.0"
+source = "git+https://github.com/adust09/bounty-ecdsa-signature.git?branch=master#0b9b6c7b60eb253810cb00acab96ade12620513c"
+dependencies = [
+ "ctor",
+ "env_logger",
+ "hex",
+ "lazy_static",
+ "logging_timer",
+ "num-bigint",
+ "rand",
+ "rayon",
+ "tfhe",
+]
+
+[[package]]
+name = "ecdsa"
 version = "0.16.9"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "ee27f32b5c5292967d2d4a9d7f1e0b0aed2c15daded5a60300e4abb9d8020bca"
@@ -1710,7 +1726,7 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "956ff9b67e26e1a6a866cb758f12c6f8746208489e3e4a4b5580802f2f0a587b"
 dependencies = [
  "cfg-if",
- "ecdsa",
+ "ecdsa 0.16.9",
  "elliptic-curve",
  "once_cell",
  "sha2",
@@ -2680,6 +2696,7 @@ name = "scholarship"
 version = "0.1.0"
 dependencies = [
  "ctor",
+ "ecdsa 0.1.0",
  "env_logger",
  "ethers",
  "eyre",

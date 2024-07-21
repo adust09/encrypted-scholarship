@@ -1,4 +1,5 @@
 use std::error::Error;
+use tfhe::integer::bigint::StaticUnsignedBigInt;
 
 use crate::client::BobClient;
 use crate::server::FheServer;
@@ -35,7 +36,13 @@ fn simulate_scholarship_application() -> Result<(), Box<dyn Error>> {
 
     // 奨学金の受け取り
     // convert (StaticUnsignedBigInt<4>, StaticUnsignedBigInt<4>) to Vec<u8>
-    // let _result = bob_client.interact_with_smart_contract(decrypted_signature);
+
+    let (part1, part2) = decrypted_signature;
+    let mut signature_vec = Vec::new();
+    signature_vec.extend_from_slice(&part1.to_bytes_le());
+    signature_vec.extend_from_slice(&part2.to_bytes_le());
+
+    let _result = bob_client.interact_with_smart_contract(signature_vec);
 
     Ok(())
 }
