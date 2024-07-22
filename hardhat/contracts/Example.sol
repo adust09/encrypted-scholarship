@@ -1,52 +1,89 @@
-// SPDX-License-Identifier: MIT 
+// SPDX-License-Identifier: MIT
 pragma solidity ^0.8.0;
 
-contract HashLockWithdraw {
-    struct Deposit {
-        address depositor;
-        uint256 amount;
-        bytes32 hash;
-        bool withdrawn;
+import "@openzeppelin/contracts/utils/cryptography/ECDSA.sol";
+import "@openzeppelin/contracts/security/ReentrancyGuard.sol";
+
+contract ScholarshipFund is ReentrancyGuard {
+    using ECDSA for bytes32;
+
+    address public owner;
+    address public fheServerPubKey;
+    uint256 public scholarshipAmount;
+    
+    mapping(address => bool) public hasApplied;
+    mapping(address => bool) public isApproved;
+    mapping(address => uint256) public donations;
+    
+    event Deposit(address indexed depositor, uint256 amount);
+    event ScholarshipRequested(address indexed applicant);
+    event ScholarshipApproved(address indexed applicant);
+    event ScholarshipWithdrawn(address indexed recipient, uint256 amount);
+
+    constructor(address _fheServerPubKey, uint256 _scholarshipAmount) {
+        owner = msg.sender;
+        fheServerPubKey = _fheServerPubKey;
+        scholarshipAmount = _scholarshipAmount;
     }
 
-    mapping(address => Deposit[]) public deposits;
-
-    event DepositCreated(address indexed depositor, uint256 amount, uint256 depositId);
-    event HashSet(address indexed depositor, uint256 depositId, bytes32 hash);
-    event WithdrawMade(address indexed depositor, address indexed recipient, uint256 amount, uint256 depositId);
+    modifier onlyOwner() {
+        require(msg.sender == owner, "Only owner can call this function");
+        _;
+    }
 
     function deposit() public payable {
         require(msg.value > 0, "Deposit amount must be greater than 0");
-
-        uint256 depositId = deposits[msg.sender].length;
-        deposits[msg.sender].push(Deposit({
-            depositor: msg.sender,
-            amount: msg.value,
-            hash: bytes32(0),
-            withdrawn: false
-        }));
-
-        emit DepositCreated(msg.sender, msg.value, depositId);
+        donations[msg.sender] += msg.value;
+        emit Deposit(msg.sender, msg.value);
     }
 
-    function setHash(address depositor, uint256 depositId, bytes32 _hash) public {
-        require(deposits[depositor][depositId].hash == bytes32(0), "Hash already set");
-        deposits[depositor][depositId].hash = _hash;
-        emit HashSet(depositor, depositId, _hash);
-    }
-
-    function withdraw(address depositor, uint256 depositId, bytes32 _random) public {
-        Deposit storage dep = deposits[depositor][depositId];
-        require(!dep.withdrawn, "Deposit has already been withdrawn");
-        require(dep.hash != bytes32(0), "Hash not set");
-        require(keccak256(abi.encodePacked(_random)) == dep.hash, "Invalid random value");
+    function requestScholarship(bytes memory signature) public nonReentrant {
+        require(!hasApplied[msg.sender], "Already applied for scholarship");
+        require(verifySignature(msg.sender, signature), "Invalid signature");
         
-        dep.withdrawn = true;
-        uint256 amount = dep.amount;
-        dep.amount = 0; // Prevent re-entrancy
+        hasApplied[msg.sender] = true;
+        isApproved[msg.sender] = true;
+        
+        emit ScholarshipRequested(msg.sender);
+        emit ScholarshipApproved(msg.sender);
+    }
 
-        payable(msg.sender).transfer(amount);
+    function verifySignature(address applicant, bytes memory signature) internal view returns (bool) {
+        bytes32 message = keccak256(abi.encodePacked(applicant));
+        bytes32 signedMessage = message.toEthSignedMessageHash();
+        address recoveredSigner = signedMessage.recover(signature);
+        return recoveredSigner == fheServerPubKey;
+    }
 
-        emit WithdrawMade(depositor, msg.sender, amount, depositId);
+    function withdraw() public nonReentrant {
+        require(isApproved[msg.sender], "Not approved for scholarship");
+        require(address(this).balance >= scholarshipAmount, "Insufficient funds in contract");
+
+        isApproved[msg.sender] = false;
+        payable(msg.sender).transfer(scholarshipAmount);
+        
+        emit ScholarshipWithdrawn(msg.sender, scholarshipAmount);
+    }
+
+    function updateScholarshipAmount(uint256 newAmount) public onlyOwner {
+        scholarshipAmount = newAmount;
+    }
+
+    function updateFHEServerPubKey(address newPubKey) public onlyOwner {
+        fheServerPubKey = newPubKey;
+    }
+
+    function getContractBalance() public view returns (uint256) {
+        return address(this).balance;
+    }
+
+    function getDonationAmount(address donor) public view returns (uint256) {
+        return donations[donor];
+    }
+
+    function withdrawRemainingFunds() public onlyOwner {
+        uint256 balance = address(this).balance;
+        require(balance > 0, "No funds to withdraw");
+        payable(owner).transfer(balance);
     }
 }

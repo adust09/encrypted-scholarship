@@ -1,0 +1,21 @@
+[package]
+name = "scholarship"
+version = "0.1.0"
+edition = "2021"
+
+# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+
+[dependencies]
+tfhe = { version = "*", features = [ "boolean", "shortint", "integer", "aarch64-unix", "internal-keycache" ] }
+ethers = { version = "2.0", features = ["abigen"] }
+tokio = { version = "1.0", features = ["full"] }
+ecdsa = { git = "https://github.com/adust09/bounty-ecdsa-signature.git", branch = "master" }
+num-bigint = { version = "0.4.3", default-features = false }
+eyre = "0.6.12"
+hex = "0.4.3"
+rand = "0.8.5"
+lazy_static = "1.4.0"
+logging_timer = "1.1.0"
+env_logger = "0.11.3"
+ctor = "0.2.4"
+rayon = "1.7.0"
