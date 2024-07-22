@@ -4,8 +4,7 @@ use tfhe::integer::{
 };
 use tfhe::shortint::parameters::PARAM_MESSAGE_2_CARRY_2;
 
-use crate::client::BobClient;
-use crate::server::FheServer;
+use crate::{client::BobClient, server::FheServer};
 
 fn to_le_bytes<const N: usize>(bigint: &StaticUnsignedBigInt<N>) -> Vec<u8> {
     let mut bytes = vec![0u8; N * 8];

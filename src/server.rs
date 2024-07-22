@@ -37,7 +37,7 @@ impl FheServer {
         let nonce = u256_from_decimal_string(
             "158972629851468960855479098042189567798917817837573660423710583832714848",
         );
-        // resultの代わりに明示的なメッセージを使う
+        // due to the limitation of the current implementation, we use a fixed message
         let msg = u256_from_decimal_string("1");
         const NUM_BLOCK: usize = 128;
         let enc_sk = self.public_key.encrypt_radix(sk, NUM_BLOCK);
@@ -46,7 +46,7 @@ impl FheServer {
         let signature = ecdsa_sign::<NUM_BLOCK, _>(
             &enc_sk,
             &enc_k,
-            msg, // resultをBooleanBlockからPにできる？0or1
+            msg,
             *GENERATOR,
             *FQ_MODULO,
             *FR_MODULO,

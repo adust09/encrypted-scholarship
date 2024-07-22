@@ -39,7 +39,6 @@ impl BobClient {
         Ok(decrypted_value)
     }
 
-    // todo: decrypt_signature
     pub fn decrypt_signature(&self, signature: (RadixCiphertext, RadixCiphertext)) -> (U256, U256) {
         let signature = (
             U256::decrypt(&signature.0, &self.client_key),
