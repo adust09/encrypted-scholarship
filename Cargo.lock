@@ -725,7 +725,7 @@ dependencies = [
 [[package]]
 name = "ecdsa"
 version = "0.1.0"
-source = "git+https://github.com/adust09/bounty-ecdsa-signature.git?branch=master#0b9b6c7b60eb253810cb00acab96ade12620513c"
+source = "git+https://github.com/adust09/tfhe-ecdsa.git?branch=master#0b9b6c7b60eb253810cb00acab96ade12620513c"
 dependencies = [
  "ctor",
  "env_logger",
