@@ -796,6 +796,25 @@ dependencies = [
 ]
 
 [[package]]
+name = "encrypted-scholarship"
+version = "0.1.0"
+dependencies = [
+ "ctor",
+ "ecdsa 0.1.0",
+ "env_logger",
+ "ethers",
+ "eyre",
+ "hex",
+ "lazy_static",
+ "logging_timer",
+ "num-bigint",
+ "rand",
+ "rayon",
+ "tfhe",
+ "tokio",
+]
+
+[[package]]
 name = "enr"
 version = "0.10.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -2689,25 +2708,6 @@ dependencies = [
  "proc-macro2",
  "quote",
  "syn 1.0.109",
-]
-
-[[package]]
-name = "scholarship"
-version = "0.1.0"
-dependencies = [
- "ctor",
- "ecdsa 0.1.0",
- "env_logger",
- "ethers",
- "eyre",
- "hex",
- "lazy_static",
- "logging_timer",
- "num-bigint",
- "rand",
- "rayon",
- "tfhe",
- "tokio",
 ]
 
 [[package]]
