@@ -30,7 +30,7 @@ impl FheServer {
         Ok(is_eligible)
     }
 
-    pub fn sign_result(&self, result: &BooleanBlock) -> (RadixCiphertext, RadixCiphertext) {
+    pub fn sign_result(&self, _result: &BooleanBlock) -> (RadixCiphertext, RadixCiphertext) {
         let sk = u256_from_decimal_string(
             "32670510020758816978083085130507043184471273380659243275938904335757337482424",
         );

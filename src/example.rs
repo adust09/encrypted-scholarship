@@ -37,7 +37,7 @@ pub fn main() -> Result<(), Box<dyn Error>> {
         let mut signature_vec = Vec::new();
         signature_vec.extend_from_slice(&to_le_bytes(&x));
         signature_vec.extend_from_slice(&to_le_bytes(&y));
-        let claim_result = bob_client.claim_scholarship(signature_vec);
+        let _claim_result = bob_client.claim_scholarship(signature_vec);
     } else {
         println!("Sorry, you are not eligible for the scholarship.");
     }
