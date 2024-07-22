@@ -725,7 +725,7 @@ dependencies = [
 [[package]]
 name = "ecdsa"
 version = "0.1.0"
-source = "git+https://github.com/adust09/bounty-ecdsa-signature.git?branch=master#0b9b6c7b60eb253810cb00acab96ade12620513c"
+source = "git+https://github.com/adust09/tfhe-ecdsa.git?branch=master#0b9b6c7b60eb253810cb00acab96ade12620513c"
 dependencies = [
  "ctor",
  "env_logger",
@@ -793,6 +793,25 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "b45de904aa0b010bce2ab45264d0631681847fa7b6f2eaa7dab7619943bc4f59"
 dependencies = [
  "cfg-if",
+]
+
+[[package]]
+name = "encrypted-scholarship"
+version = "0.1.0"
+dependencies = [
+ "ctor",
+ "ecdsa 0.1.0",
+ "env_logger",
+ "ethers",
+ "eyre",
+ "hex",
+ "lazy_static",
+ "logging_timer",
+ "num-bigint",
+ "rand",
+ "rayon",
+ "tfhe",
+ "tokio",
 ]
 
 [[package]]
@@ -2689,25 +2708,6 @@ dependencies = [
  "proc-macro2",
  "quote",
  "syn 1.0.109",
-]
-
-[[package]]
-name = "scholarship"
-version = "0.1.0"
-dependencies = [
- "ctor",
- "ecdsa 0.1.0",
- "env_logger",
- "ethers",
- "eyre",
- "hex",
- "lazy_static",
- "logging_timer",
- "num-bigint",
- "rand",
- "rayon",
- "tfhe",
- "tokio",
 ]
 
 [[package]]

@@ -1,10 +1,9 @@
+use encrypted_scholarship::{client::BobClient, server::FheServer};
 use std::error::Error;
 use tfhe::integer::{
     bigint::StaticUnsignedBigInt, keycache::IntegerKeyCache, IntegerKeyKind, PublicKey,
 };
 use tfhe::shortint::parameters::PARAM_MESSAGE_2_CARRY_2;
-
-use crate::{client::BobClient, server::FheServer};
 
 fn to_le_bytes<const N: usize>(bigint: &StaticUnsignedBigInt<N>) -> Vec<u8> {
     let mut bytes = vec![0u8; N * 8];
@@ -37,7 +36,7 @@ pub fn main() -> Result<(), Box<dyn Error>> {
         let mut signature_vec = Vec::new();
         signature_vec.extend_from_slice(&to_le_bytes(&x));
         signature_vec.extend_from_slice(&to_le_bytes(&y));
-        let claim_result = bob_client.claim_scholarship(signature_vec);
+        let _claim_result = bob_client.claim_scholarship(signature_vec);
     } else {
         println!("Sorry, you are not eligible for the scholarship.");
     }
