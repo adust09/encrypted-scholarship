@@ -1,0 +1,5 @@
+{
+  "dependencies": {
+    "@fhenixprotocol/contracts": "^0.3.1"
+  }
+}
