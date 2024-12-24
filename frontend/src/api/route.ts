@@ -7,6 +7,8 @@ export async function POST(req: Request) {
     const { bankBalance, gpa } = await req.json();
 
     // CircomのコンパイルされたCircuitファイルのパスを指定
+    // todo: trustedsetupの結果を使って、wasmファイルとzkeyファイルを生成
+    // todo: wasmファイルのパスを指定
     const wasmFile = "./path/to/your/circuit.wasm";
     const zkeyFile = "./path/to/your/circuit_final.zkey";
 
