@@ -26,3 +26,11 @@ target/
 doc/.DS_Store
 keys
 node_modules
+.roo
+.clinerules-ask
+.clinerules-code
+.clinerules-debug
+.clinerules-test
+.clinerules-architect
+.roomodes
+memory-bank
