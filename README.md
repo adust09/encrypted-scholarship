@@ -36,7 +36,6 @@ Most of encrypted-scholarship is implemented in Rust.
 ```
 
 >This repository implements an MVP
->
 > - Only the minimum required bank balance is reviewed.
 > - Retrieval of bank balance via TLS Notary is not implemented.
 > - Smart contracts only operate on the local network.
