@@ -23,12 +23,6 @@ $npx hardhat ignition deploy ./ignition/modules/Lock.ts --network localhost
 
 ## /src
 
-Most of encrypted-scholarship is implemented in Rust.
-
-- Interaction with smart contracts is done using [ethers-rs](https://github.com/gakonst/ethers-rs).
-- FHE processing is implemented based on TFHEzama's [tfhe-rs](https://github.com/zama-ai/tfhe-rs).
-- Future implementations of TLS Notary processing will also be done in Rust.
-
 ```shell
     $cd src
     $cargo test
