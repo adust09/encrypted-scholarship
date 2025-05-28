@@ -7,10 +7,16 @@ template Max(n) {
     signal input in[n];
     signal output out;
 
+    component nbs[n];        // store bit-length checkers
     component gts[n];        // store comparators
     component switchers[n+1];  // switcher for comparing maxs
 
     signal maxs[n+1];
+
+    for(var i = 0; i < n; i++) {
+        nbs[i] = Num2Bits(252);
+        nbs[i].in <== in[i];
+    }
 
     maxs[0] <== in[0];
     for(var i = 0; i < n; i++) {
