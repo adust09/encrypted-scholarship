@@ -38,7 +38,6 @@ export default function ScholarshipForm() {
       if (response.ok) {
         const result = await response.json();
         console.log("Evaluation result:", result);
-        // ここで結果に基づいて適切な処理を行う（例：結果ページへのリダイレクト）
         router.push(
           `/result?approved=${result.approved}&bankBalance=${bankBalance}&gpa=${gpa}`
         );
@@ -55,19 +54,19 @@ export default function ScholarshipForm() {
   return (
     <Card className="w-full max-w-md mx-auto">
       <CardHeader>
-        <CardTitle>奨学金審査フォーム</CardTitle>
+        <CardTitle>Application Form</CardTitle>
       </CardHeader>
       <form onSubmit={handleSubmit}>
         <CardContent className="space-y-4">
           <div className="space-y-2">
-            <Label htmlFor="bankBalance">銀行残高 (円)</Label>
+            <Label htmlFor="bankBalance">Bank Balance ($)</Label>
             <Input
               id="bankBalance"
               type="number"
               value={bankBalance}
               onChange={(e) => setBankBalance(e.target.value)}
               required
-              placeholder="例: 100000"
+              placeholder="100,000"
             />
           </div>
           <div className="space-y-2">
@@ -81,13 +80,13 @@ export default function ScholarshipForm() {
               step="0.01"
               min="0"
               max="4"
-              placeholder="例: 3.5"
+              placeholder="3.5"
             />
           </div>
         </CardContent>
         <CardFooter>
           <Button type="submit" className="w-full" disabled={isSubmitting}>
-            {isSubmitting ? "送信中..." : "審査を申請する"}
+            {isSubmitting ? "processing..." : "Apply for Scholarship"}
           </Button>
         </CardFooter>
       </form>
