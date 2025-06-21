@@ -6,23 +6,23 @@ export async function POST(req: Request) {
   try {
     const { bankBalance, gpa } = await req.json();
 
-    // CircomのコンパイルされたCircuitファイルのパスを指定
-    // todo: trustedsetupの結果を使って、wasmファイルとzkeyファイルを生成
-    // todo: wasmファイルのパスを指定
-    const wasmFile = "./path/to/your/circuit.wasm";
-    const zkeyFile = "./path/to/your/circuit_final.zkey";
+    // Specify the path to the compiled Circom circuit file
+    // todo: Generate wasm and zkey files using trusted setup results
+    // todo: Specify the path to the wasm file
+    const wasmFile = "./co-circom/ScholarshipCheck_js/ScholarshipCheck.wasm";
+    const zkeyFile = "./co-circom/ScholarshipCheck_0001.zkey";
 
-    // 入力値の準備
+    // Prepare input values
     const input = { bankBalance, gpa };
 
-    // Proofの生成
+    // Generate proof
     const { proof, publicSignals } = await snarkjs.groth16.fullProve(
       input,
       wasmFile,
       zkeyFile
     );
 
-    // 検証
+    // Verification
     const vKey = JSON.parse(
       fs.readFileSync("./path/to/your/verification_key.json", "utf8")
     );
