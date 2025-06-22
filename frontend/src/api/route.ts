@@ -5,10 +5,6 @@ import fs from "fs";
 export async function POST(req: Request) {
   try {
     const { bankBalance, gpa } = await req.json();
-
-    // Specify the path to the compiled Circom circuit file
-    // todo: Generate wasm and zkey files using trusted setup results
-    // todo: Specify the path to the wasm file
     const wasmFile = "./co-circom/ScholarshipCheck_js/ScholarshipCheck.wasm";
     const zkeyFile = "./co-circom/ScholarshipCheck_0001.zkey";
 
